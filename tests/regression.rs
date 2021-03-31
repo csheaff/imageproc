@@ -21,7 +21,7 @@ use image::{DynamicImage, GrayImage, ImageBuffer, Luma, Pixel, Rgb, RgbImage, Rg
 use imageproc::{
     definitions::{Clamp, HasBlack, HasWhite},
     edges::canny,
-    filter::{bilateral_filter, gaussian_blur_f32, sharpen3x3},
+    filter::{bilateral_filter, gaussian_blur_f32, nl_means, sharpen3x3},
     geometric_transformations::{rotate_about_center, warp, Interpolation, Projection},
     gradients,
     utils::load_image_or_panic,
@@ -658,3 +658,18 @@ fn test_bilateral_filter() {
 
     compare_to_truth_with_tolerance("lumaphant.png", "lumaphant_bilateral.png", bilat_filt, 1)
 }
+
+
+#[test]
+fn test_nl_means() {
+    fn nlm(image: &GrayImage) -> GrayImage {
+	let patch_size: u32 = 7;
+	let patch_distance: u32 = 11;
+	let sigma: f32 = 20.3;
+	let h: f32 = 0.6 * sigma;
+        nl_means(image, patch_size, patch_distance, h, sigma)
+    }
+
+    compare_to_truth_with_tolerance("astronaut_noisy.png", "astronaut_noisy_nl_means.png", nlm, 1)
+}
+

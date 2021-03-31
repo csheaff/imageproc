@@ -18,6 +18,38 @@ use conv::ValueInto;
 use std::cmp::{max, min};
 use std::f32;
 
+
+/// blah blah
+pub fn nl_means(
+    image: &GrayImage,
+    patch_size: u32,
+    patch_distance: u32,
+    h: f32,
+    sigma: f32,
+) -> Image<Luma<u8>> {
+
+    let (n_cols, n_rows) = image.dimensions();
+    let mut out = ImageBuffer::new(n_cols, n_rows);
+
+    println!("\nHIHIHIHI\n");
+
+    // fn integral_image(
+    // 	padded: Image<Luma<u8>>,
+    // 	t_row: usize,
+    // 	t_col: usize,
+    // 	n_row: usize,
+    // 	n_col: usize,
+    // 	var_diff: f32,
+    // ) -> Image<Luma<u8>> {
+
+
+
+    // 	padded
+    // }
+
+    out
+}
+
 /// Bilateral filtering of grayscale images.
 pub fn bilateral_filter(
     image: &GrayImage,
