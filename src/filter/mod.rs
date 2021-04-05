@@ -6,7 +6,7 @@ pub use self::median::median_filter;
 mod sharpen;
 pub use self::sharpen::*;
 
-use image::{GenericImage, GenericImageView, GrayImage, ImageBuffer, Luma, Pixel, Primitive};
+use image::{ConvertBuffer, GenericImage, GenericImageView, GrayImage, ImageBuffer, Luma, Pixel, Primitive};
 
 use crate::definitions::{Clamp, Image};
 use crate::integral_image::{column_running_sum, row_running_sum};
@@ -20,16 +20,85 @@ use std::f32;
 
 
 /// blah blah
+#[cfg(feature = "display-window")]
 pub fn nl_means(
     image: &GrayImage,
-    patch_size: u32,
+    patch_size: u32, // test with odd size first
     patch_distance: u32,
     h: f32,
     sigma: f32,
 ) -> Image<Luma<u8>> {
 
-    let (n_cols, n_rows) = image.dimensions();
-    let mut out = ImageBuffer::new(n_cols, n_rows);
+
+    // Pad the result to the same size as the input image, to make them easier to compare
+    // let offset = patch_size / 2;
+    // let pad_size = offset + patch_distance + 1;
+    
+    let pad_size: u32 = 51;
+    let mut img_padded = GrayImage::new(image.width() + 2 * pad_size, 
+					image.height() + 2 * pad_size);
+
+    // Clay, the next step is to actually create the padded image using the copy_from method below
+    /// However, I'd like to ge the display_image utility working so that I can verify more easily
+    /// in comparison to just printing to console or saving the image. However, it looks like you need
+    /// the utility only works for RGBA images, so i'm trying to figure out how to conver the GrayImage
+    /// to RGBA. Uncertain at the moment.
+
+    // mod window;
+    use crate::window::display_image;
+    let img_rgb = ConvertBuffer<RgbaImage>::
+    display_image("", &(image_rgb), 500, 500);
+
+
+
+    // img_padded.copy_from(&image, pad_size, pad_size).unwrap();
+
+
+    // image::ImageBuffer<Luma<u8>, Vec<u8>>
+
+    // let integral = 
+
+
+    /// Computes the integral of the squared difference between an image
+    /// and the same image shifted by (t_row, t_col).
+    // fn integral_image(
+    // 	padded_img: Image<Luma<u8>>,
+    // 	t_row: i32,
+    // 	t_col: i32,
+    // 	n_row: i32, 
+    // 	n_col: i32, 
+    // 	var_diff: f32
+    // ) -> Image<Luma<u8>> {
+
+    // 	let (n_cols, n_rows) = padded_img.dimensions();
+    // 	let mut out = ImageBuffer<Luma<u8>>::new(n_cols, n_rows);
+
+    // 	let row_start = max(1, -t_row);
+    // 	let row_end = min(n_row, n_row - t_row);
+    // 	let col_start = 1 as i32;
+    // 	let col_end = n_col - t_col;
+
+    // 	for row in row_start..row_end {
+    // 	    for col in col_start..col_end {
+    // 		let val = padded_img.get_pixel(col as u32, row as u32)[0] as i32;
+    // 		let shifted_val = padded_img.get_pixel(
+    // 		    (col + t_col) as u32, (row + t_row) as u32)[0] as i32;
+    // 		let dist = (val - shifted_val).pow(2) as f32 - var_diff;
+    // 		let val1 = out.get_pixel(col as u32, (row - 1) as u32)[0] as f32;
+    // 		let val2 = out.get_pixel((col - 1) as u32, row as u32)[0] as f32;
+    // 		let val3 = out.get_pixel((col - 1) as u32, (row - 1) as u32)[0] as f32;
+    //             out.unsafe_put_pixel(col as u32, row as u32, Luma([dist + val1 + val2 + val3]));
+    // 	    }
+    // 	}
+
+
+    // 	padded_img
+    // }
+
+
+    // https://github.com/scikit-image/scikit-image/blob/e128e0743bb2cded104654352a13ed5b4e53efb8/skimage/restoration/_nl_means_denoising.pyx#L486
+
+    // cargo +nightly test -- --nocapture test_nl_means
 
     println!("\nHIHIHIHI\n");
 
@@ -42,13 +111,8 @@ pub fn nl_means(
     // 	var_diff: f32,
     // ) -> Image<Luma<u8>> {
 
-
-
-    // 	padded
-    // }
-
-    out
-}
+    img_padded
+    }
 
 /// Bilateral filtering of grayscale images.
 pub fn bilateral_filter(
