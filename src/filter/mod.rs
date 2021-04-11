@@ -6,7 +6,7 @@ pub use self::median::median_filter;
 mod sharpen;
 pub use self::sharpen::*;
 
-use image::{ConvertBuffer, GenericImage, GenericImageView, GrayImage, ImageBuffer, Luma, Pixel, Primitive};
+use image::{GenericImage, GenericImageView, GrayImage, ImageBuffer, Luma, Pixel, Primitive};
 
 use crate::definitions::{Clamp, Image};
 use crate::integral_image::{column_running_sum, row_running_sum};
@@ -46,9 +46,7 @@ pub fn nl_means(
 
     // mod window;
     use crate::window::display_image;
-    let img_rgb = ConvertBuffer<RgbaImage>::
-    display_image("", &(image_rgb), 500, 500);
-
+    display_image("", &(image.to_rgba()), 500, 500);
 
 
     // img_padded.copy_from(&image, pad_size, pad_size).unwrap();
