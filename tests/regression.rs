@@ -8,7 +8,7 @@
 //! $ REGENERATE=1 cargo test
 //! ```
 //!
-//! [caltech256 dataset]: http://authors.library.caltech.edu/7694/
+//! [caltech256 dataset]: https://authors.library.caltech.edu/7694/
 
 #![feature(test)]
 #![feature(unboxed_closures)]
@@ -647,18 +647,16 @@ fn test_hough_line_detection() {
 
 #[test]
 fn test_bilateral_filter() {
-    fn bilat_filt(image: &GrayImage) -> GrayImage {
-        let sigma_color: f32 = 20.0;
-        let sigma_spatial: f32 = 2.0;
-        let n_bins: u32 = 255;
+    fn filter(image: &GrayImage) -> GrayImage {
+        let sigma_color: f32 = 20.;
+        let sigma_spatial: f32 = 2.;
         let radius: f32 = 3. * sigma_spatial;
         let win_size = (radius * 2. + 1.) as u32;
-        bilateral_filter(image, win_size, sigma_color, sigma_spatial, n_bins)
+        bilateral_filter(image, win_size, sigma_color, sigma_spatial)
     }
 
-    compare_to_truth_with_tolerance("lumaphant.png", "lumaphant_bilateral.png", bilat_filt, 1)
+    compare_to_truth_with_tolerance("lumaphant.png", "lumaphant_bilateral.png", filter, 1)
 }
-
 
 #[test]
 fn test_nl_means() {
@@ -672,4 +670,3 @@ fn test_nl_means() {
 
     compare_to_truth_with_tolerance("astronaut_noisy.png", "astronaut_noisy_nl_means.png", nlm, 1)
 }
-
